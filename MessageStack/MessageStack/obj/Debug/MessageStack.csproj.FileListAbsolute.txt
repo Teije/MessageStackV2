@@ -73,3 +73,9 @@ E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\Messag
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.csproj.CopyComplete
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.dll
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.pdb
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\EntityFramework.dll
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\EntityFramework.SqlServer.dll
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\EntityFramework.xml
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\EntityFramework.SqlServer.xml
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.Migrations.init.resources
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.csproj.GenerateResource.cache
