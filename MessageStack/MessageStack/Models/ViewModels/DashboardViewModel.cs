@@ -5,7 +5,11 @@ using System.Web;
 
 namespace MessageStack.Models.ViewModels
 {
-    public class DashboardViewModel
+    /// <summary>
+    /// The Dashboard is a representation of the data shown on the dashboard.
+    /// </summary>
+    public class DashboardViewModel : ViewModelBase
     {
+        public List<Contact> Contacts { get; set; }
     }
 }
