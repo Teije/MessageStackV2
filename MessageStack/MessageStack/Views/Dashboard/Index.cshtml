@@ -1,0 +1,30 @@
+﻿@using System.Web.Mvc.Html
+@using MessageStack.Models
+@using MessageStack.Models.ViewModels
+@model MessageStack.Models.ViewModels.DashboardViewModel
+
+<section class="center-element">
+    <h2>Dashboard</h2>
+    <h4>Welcome, @Model.CurrentUser.Name</h4>
+
+    <!--Contact List-->
+    <section>
+        @{
+            Html.RenderAction("ContactList", "Contact", new { CurrentUser = Model.CurrentUser });
+        }
+    </section>
+
+    <!--Chat List-->
+    <section>
+        @{
+            Html.RenderAction("ChatList", "Chat", new { CurrentUser = Model.CurrentUser });
+        }
+    </section>
+    <br /><br />
+    <section>
+        @Html.ActionLink("Logout", "Logout", "Account")
+    </section>
+</section>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}

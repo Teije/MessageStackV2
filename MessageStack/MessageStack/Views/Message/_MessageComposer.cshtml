@@ -1,0 +1,13 @@
+﻿@model MessageStack.Models.ViewModels.MessageViewModel
+
+@Html.ValidationSummary()
+@using (Html.BeginForm())
+{
+    <div class="form">
+        <div class="form-field">
+            <div class="form-textbox">@Html.TextBoxFor(m => m.Text)</div>
+
+        </div>
+        <input onClick="window.location.reload()" type="submit" value="Send" />
+    </div>
+}

@@ -1,0 +1,38 @@
+﻿@using Microsoft.Ajax.Utilities
+@model MessageStack.Models.ViewModels.ContactViewModel
+<section class="center-element">
+    <h2>Add new contact</h2>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form">
+            <!--Account Selection-->
+            <br /><div class="glyphicon glyphicon-user">
+                <br />
+            </div><br /><i class="form-label">These users have made accounts on MessageStack! <br /> Select one or more to add them to your contact list.</i>
+
+            <section class="multiple-choice-list col-lg-offset-5">
+                @for (int i = 0; i < Model.Contacts.Count; i++)
+                {
+                    <br />
+                    @Html.CheckBoxFor(m => m.Contacts[i].IsSelected)
+                    <label>@Model.Contacts[i].Name</label>
+                    @Html.HiddenFor(m => m.Contacts[i].Id)
+                    @Html.HiddenFor(m => m.Contacts[i].Name)
+                    @Html.HiddenFor(m => m.Contacts[i].ContactAccountId)
+                    @Html.HiddenFor(m => m.Contacts[i].PhoneNumber)
+                }
+            </section>
+
+            <!--Submit-->
+            <br /><br /><input class="btn btn-primary" type="submit" value="Create chat" />
+            <br /><br />
+
+            <!--Back Button-->
+            @Html.ActionLink($"Back to Dashboard", "Index", "Dashboard")
+        </div>
+    }
+</section>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}

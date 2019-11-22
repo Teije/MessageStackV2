@@ -1,0 +1,41 @@
+﻿@model MessageStack.Models.ViewModels.LoginViewModel
+<section class="center-element">
+    <h2>Log in</h2>
+
+    @using (Html.BeginForm())
+    {
+        <!--Phone Number-->
+        <div class="form-group">
+            @Html.LabelFor(m => m.PhoneNumber)<br />
+
+            <div class="col-lg-2 col-lg-offset-5">
+                @Html.EditorFor(m => m.PhoneNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "06 1234 5678" } })
+            </div><br />
+            @Html.ValidationMessageFor(m => m.PhoneNumber)
+        </div>
+
+        <!--Password-->
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password)<br />
+
+            <div class="col-lg-2 col-lg-offset-5">
+                @Html.EditorFor(m => m.Password, new { htmlAttributes = new { @class = "form-control col-lg-2", placeholder = "Password", id = "password-field" } })
+                <!--Password visibility toggle-->
+                <a class="material-icons icon" onclick="togglePasswordVisibility()">visibility</a>
+            </div><br />
+            @Html.ValidationMessageFor(m => m.Password)<br />
+        </div><br />
+
+        <!--Login Button-->
+        <input class="btn btn-primary" type="submit" value="Login" />
+        <br />
+
+        <!--Register-->
+        <div>Don't have an account yet?</div>
+        @Html.ActionLink("Register now!", "Register", "Account")
+    }
+</section>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}

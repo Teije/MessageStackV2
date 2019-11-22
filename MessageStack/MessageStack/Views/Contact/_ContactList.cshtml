@@ -1,0 +1,19 @@
+﻿@model MessageStack.Models.ViewModels.ContactListViewModel
+
+<span class="title">Contact List </span><span class="font15">@Html.ActionLink("+", "Create", "Contact", new { }, null)</span>
+<br />
+<section class="multiple-choice-list col-lg-offset-5">
+
+    @if (Model != null && Model.Contacts.Count > 0)
+    {
+
+        foreach (var c in Model.Contacts)
+        {
+            @Html.ActionLink(@c.Name, "Index", "Chat", c.ContactAccountId, null)<br />
+        }
+    }
+    else
+    {
+        <i>You have not added any contacts yet!</i>
+    }
+</section>

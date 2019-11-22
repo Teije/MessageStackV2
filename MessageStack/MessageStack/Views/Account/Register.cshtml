@@ -1,0 +1,40 @@
+﻿@model MessageStack.Models.ViewModels.RegisterViewModel
+<section class="center-element">
+    <h2>Register</h2>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form col-lg-2 col-lg-offset-5">
+            <div class="form-field">
+                <div class="form-label">  @Html.LabelFor(m => m.Name)</div>
+                <div class="form-textbox">@Html.TextBoxFor(m => m.Name, new { @class = "form-control" })</div>
+                <div class="form-message">@Html.ValidationMessageFor(m => m.Name)</div>
+            </div>
+            <br />
+            <div class="form-field">
+                <div class="form-label">  @Html.LabelFor(m => m.PhoneNumber)</div>
+                <div class="form-textbox">@Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })</div>
+                <div class="form-message">@Html.ValidationMessageFor(m => m.PhoneNumber)</div>
+            </div>
+            <br />
+            <div class="form-field">
+                <div class="form-label">  @Html.LabelFor(m => m.Password)</div>
+                <div class="form-textbox">@Html.TextBoxFor(m => m.Password, new { @class = "form-control" })</div>
+                <div class="form-message">@Html.ValidationMessageFor(m => m.Password)</div>
+            </div>
+            <br />
+            <div class="form-field">
+                <div class="form-label">  @Html.LabelFor(m => m.ConfirmPassword)</div>
+                <div class="form-textbox">@Html.TextBoxFor(m => m.ConfirmPassword, new { @class = "form-control" })</div>
+                <div class="form-message">@Html.ValidationMessageFor(m => m.ConfirmPassword)</div>
+            </div>
+            <br />
+            <input class="btn btn-primary" type="submit" value="Register" />
+            <br />
+            @Html.ActionLink("Return to Login", "Login", "Account")
+        </div>
+    }
+</section>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
