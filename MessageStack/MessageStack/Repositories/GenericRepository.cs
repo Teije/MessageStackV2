@@ -29,7 +29,7 @@ namespace MessageStack.Repositories
         /// <summary>
         /// Returns an entry from the database that matches the condition
         /// </summary>
-        public virtual T Find(Expression<Func<T, bool>> match) => Context.Set<T>().SingleOrDefault(match);
+        public virtual T Find(Expression<Func<T, bool>> match) => Context.Set<T>().FirstOrDefault(match);
 
         /// <summary>
         /// Returns all entries from the database that match the condition

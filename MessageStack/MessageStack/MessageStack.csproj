@@ -125,6 +125,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
@@ -136,8 +137,13 @@
     <Compile Include="Migrations\201911141237236_init.Designer.cs">
       <DependentUpon>201911141237236_init.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911221347093_AccountRole.cs" />
+    <Compile Include="Migrations\201911221347093_AccountRole.Designer.cs">
+      <DependentUpon>201911221347093_AccountRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\AccountRole.cs" />
     <Compile Include="Models\Chat.cs" />
     <Compile Include="Models\ChatAccount.cs" />
     <Compile Include="Models\Contact.cs" />
@@ -155,6 +161,7 @@
     <Compile Include="Models\ViewModels\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AccountRepository.cs" />
+    <Compile Include="Repositories\AccountRoleRepository.cs" />
     <Compile Include="Repositories\ChatAccountRepository.cs" />
     <Compile Include="Repositories\ChatRepository.cs" />
     <Compile Include="Repositories\ContactRepository.cs" />
@@ -183,6 +190,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Site.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -195,7 +203,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Chat\_Chat.cshtml" />
-    <Content Include="Views\Chat\_ChatList.cshtml" />
+    <Content Include="Views\Shared\_ChatList.cshtml" />
     <Content Include="Views\Chat\Create.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\Contact\_ContactList.cshtml" />
@@ -225,6 +233,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201911141237236_init.resx">
       <DependentUpon>201911141237236_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911221347093_AccountRole.resx">
+      <DependentUpon>201911221347093_AccountRole.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -13,6 +13,7 @@ namespace MessageStack.Models
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<ChatAccount> ChatAccount { get; set; }
+        public DbSet<AccountRole> AccountRole { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

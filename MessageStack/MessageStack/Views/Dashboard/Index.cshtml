@@ -8,16 +8,25 @@
     <h4>Welcome, @Model.CurrentUser.Name</h4>
 
     <!--Contact List-->
+    Contact List:
     <section>
         @{
-            Html.RenderAction("ContactList", "Contact", new { CurrentUser = Model.CurrentUser });
+            foreach (var contact in Model.Contacts)
+            {
+                <p>- <a>@contact.Name</a></p>
+            }
         }
     </section>
 
     <!--Chat List-->
+    Chat List:
     <section>
         @{
-            Html.RenderAction("ChatList", "Chat", new { CurrentUser = Model.CurrentUser });
+            foreach (var chat in Model.Chats)
+            {
+                <p>- <a>@chat.Name</a></p>
+            }
+
         }
     </section>
     <br /><br />

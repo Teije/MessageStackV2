@@ -10,6 +10,7 @@ namespace MessageStack.Models.ViewModels
     /// </summary>
     public class DashboardViewModel : ViewModelBase
     {
+        public List<Chat> Chats { get; set; }
         public List<Contact> Contacts { get; set; }
     }
 }

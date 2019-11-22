@@ -14,7 +14,6 @@ namespace MessageStack.Models.ViewModels
         public ViewModelBase()
         {
             CurrentUser = HttpContext.Current.User.Identity as Account;
-
         }
 
         public string PageTitle { get; set; }

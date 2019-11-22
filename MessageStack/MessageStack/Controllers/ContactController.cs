@@ -10,7 +10,7 @@ using MessageStack.Repositories;
 namespace MessageStack.Controllers
 {
     [Authorize]
-    public class ContactController : Controller
+    public class ContactController : BaseController
     {
         private readonly ContactRepository _contactRepository = new ContactRepository();
         private readonly AccountRepository _accountRepository = new AccountRepository();

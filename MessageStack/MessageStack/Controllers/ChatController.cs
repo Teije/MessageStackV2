@@ -10,7 +10,7 @@ using MessageStack.Repositories;
 namespace MessageStack.Controllers
 {
     [Authorize]
-    public class ChatController : Controller
+    public class ChatController : BaseController
     {
         private readonly ChatRepository _chatRepository = new ChatRepository();
         private readonly AccountRepository _accountRepository = new AccountRepository();
@@ -25,6 +25,8 @@ namespace MessageStack.Controllers
         /// </summary>
         public ActionResult Index(string id)
         {
+            if (!IsAuthorized(CurrentAccount.Id)) return View("Error");
+
             //todo return error message: chat does not exist
             if (id == null) return View();
 
@@ -76,7 +78,7 @@ namespace MessageStack.Controllers
         [ChildActionOnly]
         public ActionResult ChatList()
         {
-            var chatAccounts = _chatAccountRepository.GetFor(CurrentAccount.Id);
+            var chatAccounts = _chatAccountRepository.GetAllFor(CurrentAccount.Id);
 
             var y = chatAccounts.Select(ca => ca.Chat).Distinct();
 

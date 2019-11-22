@@ -14,6 +14,19 @@ namespace MessageStack.Repositories
 
     public class AccountRepository : GenericRepository<Account>, IAccountRepository
     {
+        public new Account Add(Account account)
+        {
+            Context.Accounts.Add(account);
+            Context.AccountRole.Add(new AccountRole()
+            {
+                AccountId = account.Id,
+                Id = Guid.NewGuid(),
+                Role = "admin"
+            });
+            Context.SaveChanges();
+            return account;
+        }
+
         public List<Account> GetAll() => Context.Accounts.Select(c => c).ToList();
 
         public Account FindByLoginDetails(string phoneNumber, string password)

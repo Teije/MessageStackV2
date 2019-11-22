@@ -11,7 +11,7 @@ using MessageStack.Repositories;
 namespace MessageStack.Controllers
 {
     [Authorize]
-    public class MessageController : Controller
+    public class MessageController : BaseController
     {
         private readonly MessageRepository _repository = new MessageRepository();
 

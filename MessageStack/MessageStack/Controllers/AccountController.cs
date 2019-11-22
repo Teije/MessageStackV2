@@ -15,7 +15,7 @@ namespace MessageStack.Controllers
     /// <summary>
     /// The AccountController handles all Account related actions, such as Login, Register and Logout
     /// </summary>
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly AccountRepository _repository = new AccountRepository();
 
@@ -37,13 +37,16 @@ namespace MessageStack.Controllers
             if (!ModelState.IsValid) return View(model);
 
             //Get the Account values from the form
-            var account = _repository.FindByLoginDetails(model.PhoneNumber.Replace("  ", ""), model.Password);
+            var account = _repository.FindByLoginDetails(model.PhoneNumber.Replace(" ", ""), model.Password);
 
             //Check if the values from the account resulted in a valid object
             if (account != null)
             {
                 //Set the authentication cookie
                 FormsAuthentication.SetAuthCookie(account.PhoneNumber, false);
+
+                account = new Account(account.Id, account.Name, account.PhoneNumber, account.Password, account.Contacts);
+
                 //Set the current session
                 Session["current"] = account;
 

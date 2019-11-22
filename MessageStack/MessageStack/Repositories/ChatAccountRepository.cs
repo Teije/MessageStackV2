@@ -13,6 +13,6 @@ namespace MessageStack.Repositories
 
         }
 
-        public List<ChatAccount> GetFor(Guid accountId) => Context.ChatAccount.Where(ca => ca.AccountId == accountId).ToList();
+        public List<ChatAccount> GetAllFor(Guid accountId) => Context.ChatAccount.Where(ca => ca.AccountId == accountId).ToList();
     }
 }
