@@ -8,7 +8,7 @@ namespace MessageStack.Models
     public class PrivateChat : BaseModel
     {
         public Account FirstUser { get; set; }
-        public Account SecondUser { get; set; }
+        public virtual Account SecondUser { get; set; }
 
         public virtual ICollection<PrivateMessage> Messages { get; set; }
 

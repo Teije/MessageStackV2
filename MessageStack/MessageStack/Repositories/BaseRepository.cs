@@ -93,11 +93,11 @@ namespace MessageStack.Repositories
             return entity;
         }
 
-        public T FirstOrDefault(Expression<Func<T, bool>> predicate) => _databaseContext.Set<T>().AsNoTracking().FirstOrDefault(predicate);
+        public T FirstOrDefault(Expression<Func<T, bool>> predicate) => _databaseContext.Set<T>().FirstOrDefault(predicate);
 
         public IEnumerable<T> GetAll() => _databaseContext.Set<T>().AsNoTracking().ToList();
 
-        public T GetById(Guid id) => _databaseContext.Set<T>().AsNoTracking().FirstOrDefault(entity => entity.Id == id);
+        public T GetById(Guid id) => _databaseContext.Set<T>().FirstOrDefault(entity => entity.Id == id);
 
         public IEnumerable<T> GetWhere(Expression<Func<T, bool>> predicate) => _databaseContext.Set<T>().AsNoTracking().Where(predicate).ToList();
 

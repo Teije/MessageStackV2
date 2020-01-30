@@ -24,12 +24,27 @@ namespace MessageStack.Controllers
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             var currentAccount = (Account)Session["Loggedin_Account"];
+            var loggedInAccount = _accountRepository.GetById(currentAccount.Id);
 
             var chatModel = new ChatListViewModel
             {
-                GroupChats = _groupChatRepository.GetWhere(gc => currentAccount.GroupChats.Contains(gc)).ToList(),
-                PrivateChats = _privateChatRepository.GetWhere(pc => currentAccount.PrivateChats.Contains(pc)).ToList()
+                GroupChats = _groupChatRepository.GetWhere(gc => gc.Paricipants.Select(p => p.Id).Contains(loggedInAccount.Id)).ToList(),
+                PrivateChats = _privateChatRepository.GetWhere(pc => pc.FirstUser.Id == loggedInAccount.Id || pc.SecondUser.Id == loggedInAccount.Id).ToList()
             };
+
+            foreach (var gc in chatModel.GroupChats)
+            {
+                var dbEntry = _groupChatRepository.GetById(gc.Id);
+                gc.Paricipants = dbEntry.Paricipants;
+            }
+
+            foreach (var pc in chatModel.PrivateChats)
+            {
+                var dbEntry = _privateChatRepository.GetById(pc.Id);
+
+                pc.FirstUser = dbEntry.FirstUser;
+                pc.SecondUser = dbEntry.SecondUser;
+            }
 
             return View(chatModel);
         }
