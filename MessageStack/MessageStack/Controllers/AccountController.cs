@@ -122,13 +122,13 @@ namespace MessageStack.Controllers
             var account = (Account) Session["Loggedin_Account"];
             if (!ModelState.IsValid) return View(model);
 
-            var currentAccount = GetCurrentAccountFromDb(account.Id);
+            var loggedInAccount = _accountRepository.Login(account.Email, model.CurrentPassword);
 
-            if (currentAccount.Password == Helpers.Encrypt.GenerateSHA512String(model.CurrentPassword))
+            if (loggedInAccount != null)
             {
-                if (model.Password != null || model.RepeatPassword != null)
+                if ((model.Password != null || model.RepeatPassword != null) && model.Password == model.RepeatPassword)
                 {
-                    account.Password = Helpers.Encrypt.GenerateSHA512String(model.Password);
+                    account.Password = Helpers.Encrypt.GenerateSHA512String(model.RepeatPassword);
                     var result = _accountRepository.Update(account);
                 }
                 else
@@ -141,7 +141,8 @@ namespace MessageStack.Controllers
                 ModelState.AddModelError("Error", "The entered passwords must be equal");
             }
 
-            return View(model);
+            LogOut();
+            return RedirectToAction("Index", "Account");
 
         }
 
@@ -170,7 +171,9 @@ namespace MessageStack.Controllers
                 account.Phonenumber = model.Phonenumber;
             }
 
-            return View();
+            var result = _accountRepository.Update(account);
+
+            return RedirectToAction("Index", "Home");
 
         }
 

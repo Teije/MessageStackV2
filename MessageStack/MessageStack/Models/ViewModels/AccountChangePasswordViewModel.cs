@@ -17,7 +17,7 @@ namespace MessageStack.Models.ViewModels
         [Required]
         [Compare("Password", ErrorMessage = "Passwords must be equal")]
         [PasswordPropertyText]
-        [DisplayName("Enter your password again")]
+        [DisplayName("Repeat your new password")]
         public string RepeatPassword { get; set; }
 
         [Required]

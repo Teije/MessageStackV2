@@ -72,13 +72,18 @@ namespace MessageStack.Controllers
         }
 
         [HttpPost]
-        public ActionResult GroupChat(Guid id)
+        public ActionResult GroupChat(string id)
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
+
+            var loggedinAccount = (Account)Session["Loggedin_Account"];
+
+            var groupChat = _groupChatRepository.GetById(new Guid(id));
+
             var groupChatViewModel = new GroupChatViewModel
             {
-                Messages = _groupMessageRepository.GetWhere(gm => gm.Id == id).ToList(),
-                Chat = _groupChatRepository.FirstOrDefault(gc => gc.Id == id)
+                Messages = _groupMessageRepository.GetWhere(gm => gm.Id == new Guid(id)).ToList(),
+                Chat = _groupChatRepository.FirstOrDefault(gc => gc.Id == new Guid(id))
             };
 
             return View(groupChatViewModel);

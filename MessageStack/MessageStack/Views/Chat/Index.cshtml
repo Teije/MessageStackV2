@@ -99,12 +99,12 @@
                 foreach (var item in Model.GroupChats)
                 {
                     <p class="col-sm-6">
-                        <span style="font-weight:bold">@item.Name</span>
-                        <span style="font-style:italic">@item.Subject</span>
+                        <span style="font-weight:bold">@item.Name</span><br/>
+                        <span style="font-style:italic">@item.Subject</span><br />
                         @if (item.Messages.Count > 0)
                         {
                             <span>
-                                @item.Messages.Last().Sender.Firstname @item.Messages.Last().Sender.Lastname says at @item.Messages.Last().SendDate.ToShortTimeString():  @item.Messages.Last().Content
+                                @item.Messages.Last().Sender.Firstname @item.Messages.Last().Sender.Lastname - @item.Messages.Last().SendDate.ToShortTimeString():  @item.Messages.Last().Content
                             </span>
                         }
                         else

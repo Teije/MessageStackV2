@@ -78,7 +78,7 @@ namespace MessageStack.Controllers
                     contact.TargetAccount = account;
 
                     var result = _contactRepository.Add(contact);
-                    return View("~/Views/Contact/Index.cshtml");
+                    return RedirectToAction("Index", "Account");
                 }
 
                 ModelState.AddModelError("Error", "The supplied contact does not exist on our platform");
@@ -88,7 +88,7 @@ namespace MessageStack.Controllers
                 ModelState.AddModelError("Error", "The supplied contact does not exist on our platform");
             }
 
-            return View(contact);
+            return RedirectToAction("Index", "Account");
         }
 
         public ActionResult ChangeContact(Guid id)
