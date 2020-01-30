@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using MessageStack.Context;
 using MessageStack.Models;
 
 namespace MessageStack.Repositories
 {
-    public class ContactRepository : GenericRepository<Contact>
+    public class ContactRepository : BaseRepository<Contact>, IBaseRepository<Contact>
     {
-        public List<Contact> GetFor(Guid accountId) => Context.Contacts.Where(c => c.OwnerAccountId == accountId).ToList();
+        private ContactRepository(MessageStackContext messageStackContext) : base(messageStackContext)
+        {
+        }
     }
 }

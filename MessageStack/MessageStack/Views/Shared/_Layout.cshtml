@@ -1,22 +1,53 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>WhatsUp</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("MessageStack", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (Session["IsLoggedin"] == null)
+                    {
+                        <li>@Html.ActionLink("Log In", "Login", "Account")</li>
+                        <li>@Html.ActionLink("Register", "Index", "Register")</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Your Account", "Index", "Account")</li>
+                        <li>@Html.ActionLink("Chats", "Index", "Chat")</li>
+                        <li>@Html.ActionLink("Contacts", "Index", "Contact")</li>
+                        <li>@Html.ActionLink("Log Out", "Loguit", "Account")</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
 
-@RenderBody()
+<div class="container body-content">
+    @RenderBody()
+    <footer>
+    </footer>
+</div>
 
-<footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/Scripts/Site.js")
     @RenderSection("scripts", required: false)
-    <script src="@Url.Content("~/Scripts/Site.js")"></script>
-</footer>
 </body>
 </html>

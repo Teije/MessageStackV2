@@ -1,0 +1,22 @@
+﻿@model MessageStack.Models.Contact
+
+<section class="jumbotron">
+
+    <h2 class="page-header">Add contact</h2>
+    <span class="alert-info">For a contact to be added, it needs to have a registered account on this platform</span>
+    @Html.ValidationSummary()
+
+    @using (Html.BeginForm())
+    {
+        @Html.LabelFor(m => m.Name)<br />
+        @Html.TextBoxFor(m => m.Name)
+
+        @Html.LabelFor(m => m.Email)<br />
+        @Html.TextBoxFor(m => m.Email)
+
+        @Html.LabelFor(m => m.Phonenumber)<br />
+        @Html.TextBoxFor(m => m.Phonenumber)
+
+        <input type="submit" value="Add contact" />
+    }
+</section>

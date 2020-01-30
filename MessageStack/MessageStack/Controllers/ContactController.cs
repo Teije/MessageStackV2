@@ -1,83 +1,84 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using MessageStack.Models;
-using MessageStack.Models.ViewModels;
+﻿using MessageStack.Models;
 using MessageStack.Repositories;
+using System;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace MessageStack.Controllers
 {
     [Authorize]
-    public class ContactController : BaseController
+    public class ContactController : Controller
     {
-        private readonly ContactRepository _contactRepository = new ContactRepository();
-        private readonly AccountRepository _accountRepository = new AccountRepository();
-        private Account CurrentAccount => (Account)Session["current"];
+        private readonly ContactRepository _contactRepository;
+        private readonly AccountRepository _accountRepository;
 
-        /// <summary>
-        /// Return a view that allows for creating a new chat for the current user
-        /// </summary>
-        public ActionResult Create() => View("Create", new ContactViewModel()
+        public ContactController() { }
+
+        public ContactController(ContactRepository contactRepository, AccountRepository accountRepository)
         {
-            Contacts = _accountRepository.GetAll().Select(a => new Contact()
-            {
-                Name = a.Name,
-                PhoneNumber = a.PhoneNumber,
-                OwnerAccountId = CurrentAccount.Id,
-                ContactAccountId = a.Id
-            })
-                .ToList()
-                .Except(_contactRepository.GetFor(CurrentAccount.Id))
-                .ToList()
-
-        });
-
-        /// <summary>
-        /// Validate & save the "create contact"-form data
-        /// </summary>
-        [HttpPost]
-        public ActionResult Create(ContactViewModel formData)
-        {
-            //Check if the form is valid
-            if (formData.Contacts.Count <= 0)
-                return RedirectToAction("Index", "Dashboard", formData.Id);
-
-            var selectedContacts = formData.Contacts.Where(c => c.IsSelected);
-
-            //Add the contacts to the database
-            foreach (var contact in selectedContacts)
-            {
-                _contactRepository.Add(new Contact()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = contact.Name,
-                    PhoneNumber = contact.PhoneNumber,
-                    OwnerAccountId = CurrentAccount.Id,
-                    ContactAccountId = contact.ContactAccountId,
-                });
-            }
-
-            //Return to the dashboard chat
-            return RedirectToAction("Index", "Dashboard", formData.Id);
+            _contactRepository = contactRepository;
+            _accountRepository = accountRepository;
         }
 
-        /// <summary>
-        /// Return a view with all contacts that belong to the specified account id
-        /// </summary>
-        [ChildActionOnly]
-        public ActionResult ContactList()
+        public ActionResult Index()
         {
-            var model = new ContactListViewModel()
-            {
-                Contacts = _contactRepository
-                    .GetFor(CurrentAccount.Id)
-                    .OrderBy(c => c.Name)
-                    .ToList()
-            };
+            return View(_contactRepository.GetWhere(c => c.OwnerAccount == Session["Loggedin_Account"]).Result.ToList());
+        }
 
-            return PartialView("_ContactList", model);
+        [HttpPost]
+        public ActionResult RemoveContact(Guid id)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _contactRepository.Remove(id);
+                return View("Index");
+            }
+
+            ModelState.AddModelError("Error", "The contact has not been removed. Try again.");
+            return View();
+        }
+
+        public ActionResult CreateContact()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult CreateContact(Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                if (Session?["Loggedin_Account"] == null) return View(contact);
+
+                var account = _accountRepository.FirstOrDefault(a => a.Phonenumber == contact.Phonenumber).Result;
+
+                if (account.Email == contact.Email)
+                {
+                    contact.OwnerAccount = (Account)Session["Loggedin_Account"];
+                    contact.TargetAccount = account;
+
+                    var result = _contactRepository.Add(contact).Result;
+                    return View("~/Views/Contact/Index.cshtml");
+                }
+
+                ModelState.AddModelError("Error", "The supplied contact does not exist on our platform");
+            }
+            else
+            {
+                ModelState.AddModelError("Error", "The supplied contact does not exist on our platform");
+            }
+
+            return View(contact);
+        }
+
+        public ActionResult ChangeContact(Guid id) => View(_contactRepository.GetById(id).Result);
+
+
+        [HttpPost]
+        public ActionResult ChangeContact(Contact contact)
+        {
+            var result = _contactRepository.Update(contact);
+            return RedirectToAction("Index");
         }
     }
 }

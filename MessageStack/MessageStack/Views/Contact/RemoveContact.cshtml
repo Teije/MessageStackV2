@@ -1,0 +1,16 @@
+﻿@model IEnumerable<MessageStack.Models.Contact>
+
+<h2>Remove contact</h2>
+<br />
+
+@Html.ValidationSummary()
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            @Html.ActionLink(item.Name, "RemoveContact", new { Id = item.Id })
+        </li>
+    }
+</ul>
+<br />

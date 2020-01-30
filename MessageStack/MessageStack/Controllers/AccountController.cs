@@ -1,118 +1,172 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Configuration;
-using System.Web.Mvc;
-using System.Web.Security;
-using System.Web.UI.WebControls;
-using MessageStack.Models;
+﻿using MessageStack.Models;
 using MessageStack.Models.ViewModels;
 using MessageStack.Repositories;
+using System;
+using System.Web.Mvc;
+using System.Web.Security;
 
 namespace MessageStack.Controllers
 {
-    /// <summary>
-    /// The AccountController handles all Account related actions, such as Login, Register and Logout
-    /// </summary>
-    public class AccountController : BaseController
+    public class AccountController : Controller
     {
-        private readonly AccountRepository _repository = new AccountRepository();
+        private readonly AccountRepository _accountRepository;
 
-        #region Login
-        /// <summary>
-        /// Returns the login view (form).
-        /// </summary>
-        public ActionResult Login()
+        public AccountController() { }
+
+        public AccountController(AccountRepository accountRepository)
         {
-            return View();
+            _accountRepository = accountRepository;
         }
 
-        /// <summary>
-        /// Validates login form data and sends it to the repository upon successful validation.
-        /// </summary>
+        [Authorize]
+        public ActionResult Index()
+        {
+            return View(Session["Loggedin_Account"]);
+        }
+
+        public ActionResult Login()
+        {
+            return View(new LoginViewModel());
+        }
+
         [HttpPost]
         public ActionResult Login(LoginViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
-            //Get the Account values from the form
-            var account = _repository.FindByLoginDetails(model.PhoneNumber.Replace(" ", ""), model.Password);
+            var account = _accountRepository.Login(model.Email, model.Password);
 
-            //Check if the values from the account resulted in a valid object
             if (account != null)
             {
-                //Set the authentication cookie
-                FormsAuthentication.SetAuthCookie(account.PhoneNumber, false);
+                FormsAuthentication.SetAuthCookie(account.Email, false);
+                Session["Loggedin_Account"] = account;
+                Session["IsLoggedIn"] = true;
 
-                account = new Account(account.Id, account.Name, account.PhoneNumber, account.Password, account.Contacts);
-
-                //Set the current session
-                Session["current"] = account;
-
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Index", "Account");
             }
 
-            ModelState.AddModelError("login-error", "The provided username or password is incorrect");
+            ModelState.AddModelError("Login error", "Your username or password is incorrect.");
 
             return View(model);
         }
-        #endregion
 
-        #region Register
-        /// <summary>
-        /// Returns the registration view (form).
-        /// </summary>
-        public ActionResult Register()
+        [Authorize]
+        public ActionResult AccountChangeName()
         {
+            var account = (Account)Session["Loggedin_Account"];
+
+            var changeAccountModel = new AccountChangeViewModel
+            {
+                Firstname = account.Firstname,
+                Lastname = account.Lastname
+            };
+
+            return View(changeAccountModel);
+        }
+
+        [HttpPost]
+        public ActionResult AccountChangeName(AccountChangeViewModel model)
+        {
+            var account = (Account)Session["Loggedin_Account"];
+
+            if (ModelState.IsValid)
+            {
+                var currentAccount = GetCurrentAccountFromDb(account.Id);
+
+                if (currentAccount?.Password == Helpers.Encrypt.GenerateSHA512String(account.Password))
+                {
+                    if (model.Firstname != null || model.Lastname != null)
+                    {
+                        account.Firstname = model.Firstname;
+                        account.Lastname = model.Lastname;
+                        var result = _accountRepository.Update(account);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Error", "Enter both first and last name");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("Error", "The provided password is incorrect");
+                }
+            }
+
+            var accountChangeViewModel = new AccountChangeViewModel
+            {
+                Firstname = account.Firstname,
+                Lastname = account.Lastname
+            };
+            return View(accountChangeViewModel);
+        }
+
+        [Authorize]
+        public ActionResult AccountChangePassword()
+        {
+            var changePasswordModel = new AccountChangePasswordViewModel();
+            return View(changePasswordModel);
+        }
+
+        [HttpPost]
+        public ActionResult AccountChangePassword(AccountChangePasswordViewModel model)
+        {
+            var account = (Account)Session["Loggedin_Account"];
+            if (!ModelState.IsValid) return View(model);
+
+            var currentAccount = GetCurrentAccountFromDb(account.Id);
+
+            if (currentAccount.Password == Helpers.Encrypt.GenerateSHA512String(model.CurrentPassword))
+            {
+                if (model.Password != null || model.RepeatPassword != null)
+                {
+                    account.Password = Helpers.Encrypt.GenerateSHA512String(model.Password);
+                    var result = _accountRepository.Update(account);
+                }
+                else
+                {
+                    ModelState.AddModelError("Error", "Please enter both password fields");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("Error", "The entered passwords must be equal");
+            }
+            return View(model);
+        }
+
+        [Authorize]
+        public ActionResult AccountChangePhoneEmail()
+        {
+            return View(new AccountChangePhoneEmailViewModel());
+        }
+
+        [HttpPost]
+        public ActionResult AccountChangePhoneEmail(AccountChangePhoneEmailViewModel model)
+        {
+            if (!ModelState.IsValid) return View();
+
+            var account = (Account)Session["Loggedin_Account"];
+
+            if (!string.IsNullOrEmpty(model.Email))
+            {
+                account.Email = model.Email;
+            }
+            if (model.Phonenumber != null && model.Email != null)
+            {
+                account.Phonenumber = model.Phonenumber;
+            }
+
             return View();
         }
 
-        /// <summary>
-        /// Validates registration form data and sends it to the repository upon successful validation.
-        /// </summary>
-        [HttpPost]
-        public ActionResult Register(RegisterViewModel model)
-        {
-            //Check if the form is valid
-            if (!ModelState.IsValid) return View(model);
-            //Check if the phone number is already in use
-            if (_repository.Find(a => a.PhoneNumber == model.PhoneNumber) != null)
-            {
-                ModelState.AddModelError("register-error", "The phone number is already in use.");
-                return View(model);
-            }
-
-            //Add the account to the database using the repository
-            var account = _repository.Add(
-                new Account(
-                    Guid.NewGuid(),
-                    model.Name,
-                    model.PhoneNumber,
-                    model.Password
-                    ));
-
-            if (account != null)
-            {
-                FormsAuthentication.SetAuthCookie(account.PhoneNumber, true);
-                Session["current"] = account;
-                return RedirectToAction("Login", "Account");
-            }
-
-            ModelState.AddModelError("register-error", "One of the fields was not filled in correctly");
-            return View(model);
-        }
-        #endregion
-
-        #region Logout
-        /// <summary>
-        /// Log out the current user from its session.
-        /// </summary>
-        public ActionResult Logout()
+        [Authorize]
+        public ActionResult LogUit()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Login", "Account");
+            Session.Clear();
+            return RedirectToAction("Index", "Home");
         }
-        #endregion
+
+        public Account GetCurrentAccountFromDb(Guid id) => _accountRepository.FirstOrDefault(a => a.Id == id).Result;
     }
 }

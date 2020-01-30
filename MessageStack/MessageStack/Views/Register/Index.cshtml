@@ -1,0 +1,40 @@
+﻿@model MessageStack.Models.ViewModels.RegisterViewModel
+
+
+<section class="panel-title">
+    <h2 class="container">Fill out the form to register your account</h2>
+</section>
+
+<section class="warning">
+    @Html.ValidationSummary()
+</section>
+
+<section class="well">
+    @using (Html.BeginForm())
+    {
+        @Html.LabelFor(m => m.Firstname)<br />
+        @Html.TextBoxFor(m => m.Firstname)
+        <br /> <br />
+
+        @Html.LabelFor(m => m.Lastname)<br />
+        @Html.TextBoxFor(m => m.Lastname)
+        <br /> <br />
+
+        @Html.LabelFor(m => m.Email)<br />
+        @Html.TextBoxFor(m => m.Email)
+        <br /> <br />
+
+        @Html.LabelFor(m => m.Phonenumber)<br />
+        @Html.TextBoxFor(m => m.Phonenumber)
+        <br /> <br />
+
+        @Html.LabelFor(m => m.Password)<br />
+        @Html.PasswordFor(m => m.Password)
+        <br /> <br />
+
+        @Html.LabelFor(m => m.ConfirmPassword)<br />
+        @Html.PasswordFor(m => m.ConfirmPassword)
+        <br /> <br />
+        <input type="submit" value="Register" />
+    }
+</section>

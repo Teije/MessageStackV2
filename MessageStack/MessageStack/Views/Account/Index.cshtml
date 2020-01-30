@@ -1,0 +1,24 @@
+﻿@model MessageStack.Models.Account
+
+<section class="container jumbotron">
+
+    <h2>Your account</h2>
+
+    @if (Model != null)
+    {
+        <h3 class="text-success">
+            Welcome, @Model.Firstname @Model.Lastname.
+        </h3>
+        <p>
+            @Html.ActionLink("Chats", "../Chat/Index")
+            @Html.ActionLink("Contacts", "../Contacts/Index").
+        </p>
+
+        <p>
+            Manage account details:<br />
+            @Html.ActionLink("Change name", "ChangeName") <br />
+            @Html.ActionLink("Change contact information", "ChangeContactInfo") <br />
+            @Html.ActionLink("Change password", "ChangePassword")
+        </p>
+    }
+</section>

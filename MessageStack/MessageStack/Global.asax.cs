@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using MessageStack.Controllers;
 
 namespace MessageStack
 {
@@ -16,6 +17,13 @@ namespace MessageStack
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+
+        }
+
+        public void ConfigureRepositories()
+        {
+
         }
     }
 }

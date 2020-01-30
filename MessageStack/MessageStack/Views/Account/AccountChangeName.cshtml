@@ -1,0 +1,33 @@
+﻿@model MessageStack.Models.ViewModels.AccountChangeViewModel
+
+<section class="container jumbotron">
+
+    <h1>Change your name</h1>
+
+    @if (Session["Loggedin_Account"] != null)
+    {
+        <h3 class="text-success glyphicon-cog">
+            Welcome, @Model.Firstname @Model.Lastname.
+        </h3>
+        <p>
+            <h2>
+                Change name
+            </h2>
+            @Html.ValidationSummary()
+            @using (Html.BeginForm())
+            {
+                @Html.LabelFor(m => m.Firstname) <br />
+                @Html.TextBoxFor(m => m.Firstname) <br />
+
+                @Html.LabelFor(m => m.Lastname) <br />
+                @Html.TextBoxFor(m => m.Lastname) <br />
+
+                @Html.LabelFor(m => m.CurrentPassword) <br />
+                @Html.TextBoxFor(m => m.CurrentPassword) <br />
+
+                <input type="submit" value="Change" id="firstsubmit" />
+
+            }
+        </p>
+    }
+</section>

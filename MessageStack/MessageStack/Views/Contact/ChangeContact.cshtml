@@ -1,0 +1,17 @@
+﻿@model  MessageStack.Models.Contact
+
+    <section class="jumbotron">
+
+        <h2>Change contact name</h2>
+
+        @Html.ValidationSummary()
+        @using (Html.BeginForm())
+        {
+            @Html.LabelFor(m => m.Name)<br />
+            @Html.TextBoxFor(m => m.Name)
+            <br />
+            <input type="submit" value="wijzig" />
+        }
+
+        You can also @Html.ActionLink("remove", "RemoveContact", new { id = Model.Id }) a contact<br />
+    </section>

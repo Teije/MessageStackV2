@@ -1,0 +1,60 @@
+﻿@model MessageStack.Models.PrivateChat
+
+<section class="jumbotron">
+    <h2>Chat met @ViewBag.OtherAccount.Firstname @ViewBag.OtherAccount.Lastname </h2>
+
+    <section style="background-color:lightsteelblue">
+        @if (Model != null && Model.Messages.Count > 0)
+        {
+            foreach (var item in Model.Messages)
+            {
+                if (item.Sender == ViewBag.OtherAccount)
+                {
+                    <p>
+                        <span style="color:orange">@item.Sender.Firstname </span> - <span style="font-style:initial">@item.SendDate.ToShortTimeString(): </span> <br />
+                        <span style="color:black">@item.Content</span>
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <span style="color:darkgoldenrod">You </span> - <span style="font-style:initial">@item.SendDate.ToShortTimeString(): </span> <br />
+                        <span style="color:black">@item.Content</span>
+                    </p>
+                }
+            }
+        }
+        else
+        {
+            <p class="alert-info">
+                No messages have been sent yet!
+            </p>
+        }
+
+    </section>
+
+    <form id="sendmessageform" method="post" action="/Chat/SendMessage">
+
+        <input type="text" id="message" name="message" placeholder="Write your message" />
+        <input hidden id="ChatId" name="ChatId" value="@Model.Id" />
+        <input hidden id="OtherAccountId" name="OtherAccountId" value="@ViewBag.OtherAccount.Id" />
+        <input type="submit" name="submit">
+    </form>
+</section>
+
+<script type="text/javascript">
+    $('#sendmessageform').on('submit', function (e) {
+        e.preventDefault();
+        var url = $(this).closest('form').attr('action'), data = $(this).closest('form').serialize();
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            success: function () {
+                console.log('succes');
+                location.reload();
+            }
+        });
+    });
+</script>

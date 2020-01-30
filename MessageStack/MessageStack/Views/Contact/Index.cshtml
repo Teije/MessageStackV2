@@ -1,0 +1,29 @@
+﻿@model ICollection<MessageStack.Models.Contact>
+
+<section class="jumbotron">
+    <h2 class="h2">Contacts</h2>
+
+    <p class="alert-link">
+        Add a new contact @Html.ActionLink("here", "CreateContact")
+    </p>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <p class="item">
+                <span style="font-weight:bold">@item.Name</span><br />
+                <span style="font-style:italic">@item.Email - @item.Phonenumber</span> <br />
+                @Html.ActionLink("Edit contact", "ChangeContact", new { id = item.Id }) <br />
+                @Html.ActionLink("Go to chat (or create if it doesn't exist)'", "PrivateChat", "Chat", new { Id = item.TargetAccount.Id }, new AjaxOptions { HttpMethod = "POST" })
+            </p><br />
+        }
+    }
+    else
+    {
+        <p class="alert-info">
+            No contacts have been found
+        </p>
+    }
+
+</section>

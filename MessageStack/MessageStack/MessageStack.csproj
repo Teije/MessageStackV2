@@ -124,15 +124,16 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Context\MessageStackContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
-    <Compile Include="Controllers\DashboardController.cs" />
-    <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Encrypt.cs" />
     <Compile Include="Migrations\201911141237236_init.cs" />
     <Compile Include="Migrations\201911141237236_init.Designer.cs">
       <DependentUpon>201911141237236_init.cs</DependentUpon>
@@ -141,32 +142,34 @@
     <Compile Include="Migrations\201911221347093_AccountRole.Designer.cs">
       <DependentUpon>201911221347093_AccountRole.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001301228424_Version2.cs" />
+    <Compile Include="Migrations\202001301228424_Version2.Designer.cs">
+      <DependentUpon>202001301228424_Version2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
-    <Compile Include="Models\AccountRole.cs" />
-    <Compile Include="Models\Chat.cs" />
-    <Compile Include="Models\ChatAccount.cs" />
+    <Compile Include="Models\BaseModel.cs" />
     <Compile Include="Models\Contact.cs" />
-    <Compile Include="Models\Message.cs" />
-    <Compile Include="Models\MessageStackContext.cs" />
-    <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="Models\GroupChat.cs" />
+    <Compile Include="Models\GroupMessage.cs" />
+    <Compile Include="Models\PrivateChat.cs" />
+    <Compile Include="Models\PrivateMessage.cs" />
+    <Compile Include="Models\ViewModels\AccountChangePasswordViewModel.cs" />
+    <Compile Include="Models\ViewModels\AccountChangePhoneEmailViewModel.cs" />
+    <Compile Include="Models\ViewModels\AccountChangeViewModel.cs" />
     <Compile Include="Models\ViewModels\ChatListViewModel.cs" />
-    <Compile Include="Models\ViewModels\ChatViewModel.cs" />
-    <Compile Include="Models\ViewModels\ContactListViewModel.cs" />
-    <Compile Include="Models\ViewModels\ContactViewModel.cs" />
-    <Compile Include="Models\ViewModels\DashboardViewModel.cs" />
+    <Compile Include="Models\ViewModels\GroupChatViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
-    <Compile Include="Models\ViewModels\MessageViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
-    <Compile Include="Models\ViewModels\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AccountRepository.cs" />
-    <Compile Include="Repositories\AccountRoleRepository.cs" />
-    <Compile Include="Repositories\ChatAccountRepository.cs" />
-    <Compile Include="Repositories\ChatRepository.cs" />
+    <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\ContactRepository.cs" />
-    <Compile Include="Repositories\GenericRepository.cs" />
-    <Compile Include="Repositories\MessageRepository.cs" />
+    <Compile Include="Repositories\GroupChatRepository.cs" />
+    <Compile Include="Repositories\GroupMessageRepository.cs" />
+    <Compile Include="Repositories\PrivateChatRepository.cs" />
+    <Compile Include="Repositories\PrivateMessageRepository.cs" />
+    <Compile Include="Repositories\RepositoryContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -199,20 +202,24 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Chat\_Chat.cshtml" />
-    <Content Include="Views\Shared\_ChatList.cshtml" />
-    <Content Include="Views\Chat\Create.cshtml" />
-    <Content Include="Views\Chat\Index.cshtml" />
-    <Content Include="Views\Contact\_ContactList.cshtml" />
-    <Content Include="Views\Contact\Create.cshtml" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\Message\_MessageComposer.cshtml" />
-    <Content Include="Views\Message\Message.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Logout.cshtml" />
+    <Content Include="Views\Account\AccountChangePhoneEmail.cshtml" />
+    <Content Include="Views\Account\AccountChangeName.cshtml" />
+    <Content Include="Views\Account\AccountChangePassword.cshtml" />
+    <Content Include="Views\Chat\Index.cshtml" />
+    <Content Include="Views\Chat\SendPrivateMessage.cshtml" />
+    <Content Include="Views\Chat\PrivateChat.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Register\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Contact\Index.cshtml" />
+    <Content Include="Views\Contact\RemoveContact.cshtml" />
+    <Content Include="Views\Contact\CreateContact.cshtml" />
+    <Content Include="Views\Contact\ChangeContact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -236,6 +243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911221347093_AccountRole.resx">
       <DependentUpon>201911221347093_AccountRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001301228424_Version2.resx">
+      <DependentUpon>202001301228424_Version2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
