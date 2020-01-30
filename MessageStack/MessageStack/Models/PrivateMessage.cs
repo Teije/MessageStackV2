@@ -13,6 +13,6 @@ namespace MessageStack.Models
         public string Content { get; set; }
         public DateTime SendDate { get; set; }
         public Account Sender { get; set; }
-        public PrivateChat PrivateChat { get; set; }
+        public Guid PrivateChatId { get; set; }
     }
 }

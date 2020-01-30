@@ -78,7 +78,16 @@ namespace MessageStack.Repositories
         public T Add(T entity)
         {
             entity.Id = Guid.NewGuid();
-            _databaseContext.Set<T>().Attach(entity);
+            try
+            {
+                _databaseContext.Set<T>().Attach(entity);
+            }
+            catch
+            {
+                _databaseContext.Entry(entity).State = EntityState.Added;
+                _databaseContext.Set<T>().Attach(entity);
+            }
+
             _databaseContext.Set<T>().Add(entity);
             _databaseContext.SaveChanges();
             return entity;

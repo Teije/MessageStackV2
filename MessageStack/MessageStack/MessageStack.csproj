@@ -170,6 +170,10 @@
     <Compile Include="Migrations\202001301921597_SplitContactName.Designer.cs">
       <DependentUpon>202001301921597_SplitContactName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001302050121_PrivateMessageChatId.cs" />
+    <Compile Include="Migrations\202001302050121_PrivateMessageChatId.Designer.cs">
+      <DependentUpon>202001302050121_PrivateMessageChatId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\BaseModel.cs" />
@@ -276,6 +280,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001301921597_SplitContactName.resx">
       <DependentUpon>202001301921597_SplitContactName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001302050121_PrivateMessageChatId.resx">
+      <DependentUpon>202001302050121_PrivateMessageChatId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

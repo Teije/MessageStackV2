@@ -71,7 +71,7 @@ namespace MessageStack.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendMessage(string message, string chatId, string otherAccountId)
+        public ActionResult SendPrivateMessage(string message, string chatId, string otherAccountId)
         {
             if (IsLoggedIn())
             {
@@ -82,9 +82,9 @@ namespace MessageStack.Controllers
                     Content = message,
                     SendDate = DateTime.Now,
                     Sender = (Account)Session["Loggedin_Account"],
-                    PrivateChat = chat
+                    PrivateChatId = chat.Id
                 };
-                chat.Messages.Add(privateMessage);
+                //chat.Messages.Add(privateMessage);
 
                 var result = _privateMessageRepository.Add(privateMessage);
 
@@ -95,7 +95,7 @@ namespace MessageStack.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendPrivateMessage(GroupMessage message)
+        public ActionResult SendGroupMessage(GroupMessage message)
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             return View();
@@ -116,7 +116,7 @@ namespace MessageStack.Controllers
 
             var message = new PrivateMessage
             {
-                PrivateChat = newChat,
+                PrivateChatId = newChat.Id,
                 Content = "No messages have been sent yet!",
                 SendDate = DateTime.Now,
             };

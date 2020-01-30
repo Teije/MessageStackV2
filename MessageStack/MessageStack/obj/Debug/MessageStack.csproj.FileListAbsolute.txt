@@ -96,3 +96,4 @@ E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\Messag
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\System.Threading.Tasks.Extensions.xml
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.Migrations.ChangedRequiredOnContact.resources
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.Migrations.SplitContactName.resources
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.Migrations.PrivateMessageChatId.resources
