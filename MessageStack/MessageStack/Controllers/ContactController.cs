@@ -30,28 +30,38 @@ namespace MessageStack.Controllers
             foreach (var contact in contacts)
             {
                 var targetAccount = _accountRepository.FirstOrDefault(a => a.Email == contact.Email);
+                var targetContact = _contactRepository.FirstOrDefault(a => a.Email == contact.Email);
 
                 contact.OwnerAccount = loggedInAccount;
                 contact.TargetAccount = targetAccount;
                 contact.Phonenumber = targetAccount.Phonenumber;
+                contact.Firstname = targetContact.Firstname;
+                contact.Lastname = targetContact.Lastname;
             }
 
             return View(contacts);
         }
 
+        public ActionResult RemoveContact()
+        {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
+
+            return View();
+        }
+
         [HttpPost]
-        public ActionResult RemoveContact(Guid id)
+        public ActionResult RemoveContact(string id)
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
 
             if (ModelState.IsValid)
             {
-                var result = _contactRepository.Remove(id);
-                return View("Index");
+                var result = _contactRepository.Remove(new Guid(id));
+                return RedirectToAction("Index", "Account");
             }
 
             ModelState.AddModelError("Error", "The contact has not been removed. Try again.");
-            return View();
+            return RedirectToAction("Index", "Account");
         }
 
         public ActionResult CreateContact()

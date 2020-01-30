@@ -1,16 +1,14 @@
-﻿@model IEnumerable<MessageStack.Models.Contact>
+﻿@model string
+    <section class="jumbotron">
+        <h2>Confirm remove contact</h2>
+        <br />
 
-<h2>Remove contact</h2>
-<br />
+        @Html.ValidationSummary()
+        @using (Html.BeginForm())
+        {
+            <input type="hidden" value="@Model" />
+            <input type="submit" value="Remove contact" />
+        }
 
-@Html.ValidationSummary()
-
-<ul>
-    @foreach (var item in Model)
-    {
-        <li>
-            @Html.ActionLink(item.Name, "RemoveContact", new { Id = item.Id })
-        </li>
-    }
-</ul>
-<br />
+        <br />
+    </section>

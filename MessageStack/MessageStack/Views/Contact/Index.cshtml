@@ -15,7 +15,8 @@
                 <span style="font-weight:bold">@item.Firstname @item.Lastname</span><br />
                 <span style="font-style:italic">@item.Email - @item.Phonenumber</span> <br />
                 @Html.ActionLink("Edit contact", "ChangeContact", new { id = item.Id }) <br />
-                @Html.ActionLink("Go to chat (or create if it doesn't exist)'", "PrivateChat", "Chat", new {otherAccountId = item.TargetAccount.Id}, new AjaxOptions { HttpMethod = "POST" })
+                @Html.ActionLink("Remove contact", "RemoveContact", new {id = item.Id})<br />
+                @Html.ActionLink("Go to chat (or create if it doesn't exist)", "PrivateChat", "Chat", new {otherAccountId = item.TargetAccount.Id}, new AjaxOptions { HttpMethod = "POST" })
             <br /><br /><br /></p><br />
 
         }

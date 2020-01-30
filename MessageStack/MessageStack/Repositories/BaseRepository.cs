@@ -116,7 +116,6 @@ namespace MessageStack.Repositories
         {
             var entity = _databaseContext.Set<T>().First(t => t.Id == id);
             _databaseContext.Set<T>().Remove(entity);
-            Detach(entity);
             _databaseContext.SaveChanges();
 
             return entity;
