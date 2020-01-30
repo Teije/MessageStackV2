@@ -78,9 +78,7 @@ namespace MessageStack.Controllers
 
             if (ModelState.IsValid)
             {
-                var currentAccount = GetCurrentAccountFromDb(account.Id);
-
-                if (currentAccount?.Password == Helpers.Encrypt.GenerateSHA512String(account.Password))
+                if (account.Password == Helpers.Encrypt.GenerateSHA512String(model.CurrentPassword))
                 {
                     if (model.Firstname != null || model.Lastname != null)
                     {
@@ -104,7 +102,7 @@ namespace MessageStack.Controllers
                 Firstname = account.Firstname,
                 Lastname = account.Lastname
             };
-            return View(accountChangeViewModel);
+            return RedirectToAction("Index","Account")
 
             ;
         }

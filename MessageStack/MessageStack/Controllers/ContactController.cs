@@ -26,10 +26,14 @@ namespace MessageStack.Controllers
             var loggedInAccount = (Account) Session["Loggedin_Account"];
             var contacts = _contactRepository.GetWhere(c => c.OwnerAccount.Id == loggedInAccount.Id).ToList();
 
+
             foreach (var contact in contacts)
             {
+                var targetAccount = _accountRepository.FirstOrDefault(a => a.Email == contact.Email);
+
                 contact.OwnerAccount = loggedInAccount;
-                contact.TargetAccount = _accountRepository.FirstOrDefault(a => a.Phonenumber == contact.Phonenumber);
+                contact.TargetAccount = targetAccount;
+                contact.Phonenumber = targetAccount.Phonenumber;
             }
 
             return View(contacts);
@@ -101,8 +105,13 @@ namespace MessageStack.Controllers
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
 
-            var result = _contactRepository.Update(contact);
-            return RedirectToAction("Index");
+            var dbEntity = _contactRepository.GetById(contact.Id);
+
+            dbEntity.Firstname = contact.Firstname;
+            dbEntity.Lastname = contact.Lastname;
+
+            var result = _contactRepository.Update(dbEntity);
+            return RedirectToAction("Index", "Contact");
         }
     }
 }

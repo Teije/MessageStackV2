@@ -3,6 +3,7 @@ using MessageStack.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -93,20 +94,27 @@ namespace MessageStack.Repositories
 
         public T Update(T entity)
         {
-            var newEntry = _databaseContext.Set<T>().AsNoTracking().First(t => t.Id == entity.Id);
-            _databaseContext.Entry(newEntry).CurrentValues.SetValues(entity);
+            var dbEntry = _databaseContext.Set<T>().Find(entity.Id);
+
+            _databaseContext.Set<T>().Attach(dbEntry);
+            _databaseContext.Entry(dbEntry).CurrentValues.SetValues(entity);
+            _databaseContext.Set<T>().AddOrUpdate(dbEntry);
             _databaseContext.SaveChanges();
-            return entity;
+            return dbEntry;
         }
 
         public T Remove(Guid id)
         {
             var entity = _databaseContext.Set<T>().First(t => t.Id == id);
-
             _databaseContext.Set<T>().Remove(entity);
+            Detach(entity);
             _databaseContext.SaveChanges();
 
             return entity;
+        }
+        void Detach(T entity)
+        {
+            _databaseContext.Entry(entity).State = EntityState.Detached;
         }
 
         #endregion CRUD Methods

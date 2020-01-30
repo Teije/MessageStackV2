@@ -8,8 +8,11 @@
 
     @using (Html.BeginForm())
     {
-        @Html.LabelFor(m => m.Name)<br />
-        @Html.TextBoxFor(m => m.Name)<br />
+        @Html.LabelFor(m => m.Firstname)<br />
+        @Html.TextBoxFor(m => m.Firstname)<br />
+
+        @Html.LabelFor(m => m.Lastname)<br />
+        @Html.TextBoxFor(m => m.Lastname)<br />
 
         @Html.LabelFor(m => m.Email)<br />
         @Html.TextBoxFor(m => m.Email)<br />

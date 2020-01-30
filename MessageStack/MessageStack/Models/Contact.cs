@@ -11,15 +11,17 @@ namespace MessageStack.Models
     public class Contact : BaseModel
     {
         [Required]
-        [Display(Name = "Name: ")]
-        public string Name { get; set; }
+        [Display(Name = "Firstname")]
+        public string Firstname { get; set; }
 
         [Required]
-        [Display(Name = "Number: ")]
+        [Display(Name = "Lastname")]
+        public string Lastname { get; set; }
+
+        [Display(Name = "Number")]
         public string Phonenumber { get; set; }
 
-        [Required]
-        [Display(Name = "Email: ")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         public Account OwnerAccount { get; set; }

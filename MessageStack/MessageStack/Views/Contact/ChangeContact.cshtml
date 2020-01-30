@@ -7,10 +7,19 @@
         @Html.ValidationSummary()
         @using (Html.BeginForm())
         {
-            @Html.LabelFor(m => m.Name)<br />
-            @Html.TextBoxFor(m => m.Name)
+            @Html.LabelFor(m => m.Firstname)<br />
+            @Html.TextBoxFor(m => m.Firstname)
             <br />
-            <input type="submit" value="wijzig" />
+            @Html.LabelFor(m => m.Lastname)<br />
+            @Html.TextBoxFor(m => m.Lastname)
+            <br />
+
+            <input name="Id" value="@Model.Id" hidden/>
+            <input name="Number" value="@Model.Phonenumber" hidden/>
+            <input name="Email" value="@Model.Email" hidden/>
+            <input name="OwnerAccount" value="@Model.OwnerAccount" hidden/>
+            <input name="TargetAccount" value="@Model.TargetAccount" hidden/>
+            <input type="submit" value="Change" />
         }
 
         You can also @Html.ActionLink("remove", "RemoveContact", new { id = Model.Id }) a contact<br />

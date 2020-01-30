@@ -162,6 +162,14 @@
     <Compile Include="Migrations\202001301228424_Version2.Designer.cs">
       <DependentUpon>202001301228424_Version2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001301919087_ChangedRequiredOnContact.cs" />
+    <Compile Include="Migrations\202001301919087_ChangedRequiredOnContact.Designer.cs">
+      <DependentUpon>202001301919087_ChangedRequiredOnContact.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001301921597_SplitContactName.cs" />
+    <Compile Include="Migrations\202001301921597_SplitContactName.Designer.cs">
+      <DependentUpon>202001301921597_SplitContactName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\BaseModel.cs" />
@@ -262,6 +270,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001301228424_Version2.resx">
       <DependentUpon>202001301228424_Version2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001301919087_ChangedRequiredOnContact.resx">
+      <DependentUpon>202001301919087_ChangedRequiredOnContact.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001301921597_SplitContactName.resx">
+      <DependentUpon>202001301921597_SplitContactName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
