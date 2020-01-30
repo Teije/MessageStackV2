@@ -9,13 +9,13 @@
     @using (Html.BeginForm())
     {
         @Html.LabelFor(m => m.Name)<br />
-        @Html.TextBoxFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name)<br />
 
         @Html.LabelFor(m => m.Email)<br />
-        @Html.TextBoxFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email)<br />
 
         @Html.LabelFor(m => m.Phonenumber)<br />
-        @Html.TextBoxFor(m => m.Phonenumber)
+        @Html.TextBoxFor(m => m.Phonenumber)<br />
 
         <input type="submit" value="Add contact" />
     }

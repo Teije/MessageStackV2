@@ -84,3 +84,13 @@ E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\Messag
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.pdb
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.Migrations.AccountRole.resources
 E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\obj\Debug\MessageStack.Migrations.Version2.resources
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\Microsoft.Bcl.AsyncInterfaces.dll
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\Microsoft.Extensions.DependencyInjection.dll
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\System.Runtime.CompilerServices.Unsafe.dll
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\System.Threading.Tasks.Extensions.dll
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\Microsoft.Bcl.AsyncInterfaces.xml
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\Microsoft.Extensions.DependencyInjection.xml
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\Microsoft.Extensions.DependencyInjection.Abstractions.xml
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\System.Runtime.CompilerServices.Unsafe.xml
+E:\Libraries\Documents\Visual Studio Projects\MessageStackV2\MessageStack\MessageStack\bin\System.Threading.Tasks.Extensions.xml

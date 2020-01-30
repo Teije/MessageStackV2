@@ -4,24 +4,27 @@ using MessageStack.Repositories;
 using System;
 using System.Web.Mvc;
 using System.Web.Security;
+using MessageStack.Context;
 
 namespace MessageStack.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private readonly AccountRepository _accountRepository;
-
-        public AccountController() { }
-
-        public AccountController(AccountRepository accountRepository)
+        public AccountController() : this (RepositoryContext.GetInstance())
         {
-            _accountRepository = accountRepository;
+
         }
 
-        [Authorize]
+        public AccountController(MessageStackContext messageStackContext) : base(messageStackContext)
+        {
+
+        }
+
         public ActionResult Index()
         {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             return View(Session["Loggedin_Account"]);
+
         }
 
         public ActionResult Login()
@@ -42,6 +45,8 @@ namespace MessageStack.Controllers
                 Session["Loggedin_Account"] = account;
                 Session["IsLoggedIn"] = true;
 
+                var session = Session["Loggedin_Account"];
+
                 return RedirectToAction("Index", "Account");
             }
 
@@ -50,10 +55,10 @@ namespace MessageStack.Controllers
             return View(model);
         }
 
-        [Authorize]
         public ActionResult AccountChangeName()
         {
-            var account = (Account)Session["Loggedin_Account"];
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
+            var account = (Account) Session["Loggedin_Account"];
 
             var changeAccountModel = new AccountChangeViewModel
             {
@@ -62,12 +67,14 @@ namespace MessageStack.Controllers
             };
 
             return View(changeAccountModel);
+
         }
 
         [HttpPost]
         public ActionResult AccountChangeName(AccountChangeViewModel model)
         {
-            var account = (Account)Session["Loggedin_Account"];
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
+            var account = (Account) Session["Loggedin_Account"];
 
             if (ModelState.IsValid)
             {
@@ -98,19 +105,23 @@ namespace MessageStack.Controllers
                 Lastname = account.Lastname
             };
             return View(accountChangeViewModel);
+
+            ;
         }
 
-        [Authorize]
         public ActionResult AccountChangePassword()
         {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             var changePasswordModel = new AccountChangePasswordViewModel();
             return View(changePasswordModel);
+
         }
 
         [HttpPost]
         public ActionResult AccountChangePassword(AccountChangePasswordViewModel model)
         {
-            var account = (Account)Session["Loggedin_Account"];
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
+            var account = (Account) Session["Loggedin_Account"];
             if (!ModelState.IsValid) return View(model);
 
             var currentAccount = GetCurrentAccountFromDb(account.Id);
@@ -131,42 +142,53 @@ namespace MessageStack.Controllers
             {
                 ModelState.AddModelError("Error", "The entered passwords must be equal");
             }
+
             return View(model);
+
         }
 
-        [Authorize]
         public ActionResult AccountChangePhoneEmail()
         {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             return View(new AccountChangePhoneEmailViewModel());
+
         }
 
         [HttpPost]
         public ActionResult AccountChangePhoneEmail(AccountChangePhoneEmailViewModel model)
         {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             if (!ModelState.IsValid) return View();
 
-            var account = (Account)Session["Loggedin_Account"];
+            var account = (Account) Session["Loggedin_Account"];
 
             if (!string.IsNullOrEmpty(model.Email))
             {
                 account.Email = model.Email;
             }
+
             if (model.Phonenumber != null && model.Email != null)
             {
                 account.Phonenumber = model.Phonenumber;
             }
 
             return View();
+
         }
 
-        [Authorize]
-        public ActionResult LogUit()
+        public ActionResult LogOut()
         {
-            FormsAuthentication.SignOut();
-            Session.Clear();
+            if (IsLoggedIn())
+            {
+
+                FormsAuthentication.SignOut();
+                Session.Clear();
+                return RedirectToAction("Index", "Home");
+            }
+
             return RedirectToAction("Index", "Home");
         }
 
-        public Account GetCurrentAccountFromDb(Guid id) => _accountRepository.FirstOrDefault(a => a.Id == id).Result;
+        public Account GetCurrentAccountFromDb(Guid id) => _accountRepository.FirstOrDefault(a => a.Id == id);
     }
 }

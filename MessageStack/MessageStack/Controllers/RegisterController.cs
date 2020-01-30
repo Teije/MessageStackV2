@@ -1,20 +1,21 @@
-﻿using MessageStack.Models;
+﻿using System.Linq;
+using MessageStack.Models;
 using MessageStack.Models.ViewModels;
 using MessageStack.Repositories;
 using System.Web.Mvc;
 using System.Web.Security;
+using MessageStack.Context;
 
 namespace MessageStack.Controllers
 {
-    public class RegisterController : Controller
+    public class RegisterController : BaseController
     {
-        private readonly AccountRepository _accountRepository;
-
-        public RegisterController() { }
-
-        public RegisterController(AccountRepository accountRepository)
+        public RegisterController() : this (RepositoryContext.GetInstance())
         {
-            _accountRepository = accountRepository;
+        }
+
+        public RegisterController(MessageStackContext messageStackContext) : base(messageStackContext)
+        {
         }
 
         public ActionResult Index()
@@ -31,7 +32,7 @@ namespace MessageStack.Controllers
         {
             if (!ModelState.IsValid) return View(registerViewModel);
 
-            if (_accountRepository.FirstOrDefault(a => a.Email == registerViewModel.Email && a.Phonenumber == registerViewModel.Phonenumber).Result == null)
+            if (_accountRepository.FirstOrDefault(a => a.Email == registerViewModel.Email || a.Phonenumber == registerViewModel.Phonenumber) == null)
             {
                 var account = new Account
                 {
@@ -42,7 +43,7 @@ namespace MessageStack.Controllers
                     Password = Helpers.Encrypt.GenerateSHA512String(registerViewModel.Password)
                 };
 
-                if (_accountRepository.Add(account).Result != null)
+                if (_accountRepository.Add(account) != null)
                 {
                     Session["Loggedin_Account"] = account;
                     FormsAuthentication.SetAuthCookie(account.Email, false);
@@ -58,7 +59,7 @@ namespace MessageStack.Controllers
                 ModelState.AddModelError("Error", "The provided information is already in use");
             }
 
-            return View(registerViewModel);
+            return RedirectToAction("Index", "Account");
         }
     }
 }

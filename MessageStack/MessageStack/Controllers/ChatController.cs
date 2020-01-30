@@ -4,102 +4,107 @@ using MessageStack.Repositories;
 using System;
 using System.Linq;
 using System.Web.Mvc;
+using MessageStack.Context;
 
 namespace MessageStack.Controllers
 {
-    [Authorize]
-    public class ChatController : Controller
+    public class ChatController : BaseController
     {
-        private readonly AccountRepository _accountRepository;
-        private readonly GroupChatRepository _groupChatRepository;
-        private readonly GroupMessageRepository _groupMessageRepository;
-        private readonly PrivateChatRepository _privateChatRepository;
-        private readonly PrivateMessageRepository _privateMessageRepository;
-
-        public ChatController() { }
-
-        public ChatController(AccountRepository accountRepository, GroupChatRepository groupChatRepository, GroupMessageRepository groupMessageRepository, PrivateChatRepository privateChatRepository, PrivateMessageRepository privateMessageRepository)
+        public ChatController() : this (RepositoryContext.GetInstance())
         {
-            _accountRepository = accountRepository;
-            _groupChatRepository = groupChatRepository;
-            _groupMessageRepository = groupMessageRepository;
-            _privateChatRepository = privateChatRepository;
-            _privateMessageRepository = privateMessageRepository;
+
         }
 
-        // GET: Chat
+        public ChatController(MessageStackContext messageStackContext) : base(messageStackContext)
+        {
+
+        }
+
         public ActionResult Index()
         {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             var currentAccount = (Account)Session["Loggedin_Account"];
 
             var chatModel = new ChatListViewModel
             {
-                GroupChats = _groupChatRepository.GetWhere(gc => currentAccount.GroupChats.Contains(gc)).Result.ToList(),
-                PrivateChats = _privateChatRepository.GetWhere(pc => currentAccount.PrivateChats.Contains(pc)).Result.ToList()
+                GroupChats = _groupChatRepository.GetWhere(gc => currentAccount.GroupChats.Contains(gc)).ToList(),
+                PrivateChats = _privateChatRepository.GetWhere(pc => currentAccount.PrivateChats.Contains(pc)).ToList()
             };
 
             return View(chatModel);
         }
 
         [HttpGet]
-        public ActionResult PrivateChat(Guid chatId, Guid otherAccountId)
+        public ActionResult PrivateChat(string otherAccountId)
         {
-            var loggedinAccount = (Account)Session["Loggedin_Account"];
-            var otherAccount = _accountRepository.FirstOrDefault(a => a.Id == otherAccountId).Result;
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
 
-            var privateChat = _privateChatRepository.FirstOrDefault(pc => pc.Id == chatId).Result;
+            var loggedinAccount = (Account)Session["Loggedin_Account"];
+            var otherAccount = _accountRepository.FirstOrDefault(a => a.Id == new Guid(otherAccountId));
+
+            var privateChat = _privateChatRepository.FirstOrDefault(pc =>
+                pc.FirstUser.Id == otherAccount.Id || pc.SecondUser.Id == otherAccount.Id);
 
             if (privateChat == null)
             {
                 return View(CreatePrivateChat(loggedinAccount, otherAccount));
             }
 
-            ViewBag.OtherAccount = privateChat.FirstUser == (Account)Session["Loggedin_Account"]
-                ? privateChat.SecondUser
-                : privateChat.FirstUser;
+            ViewBag.OtherAccount = otherAccount;
 
             return View(privateChat);
+
         }
 
         [HttpPost]
         public ActionResult GroupChat(Guid id)
         {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             var groupChatViewModel = new GroupChatViewModel
             {
-                Messages = _groupMessageRepository.GetWhere(gm => gm.Id == id).Result.ToList(),
-                Chat = _groupChatRepository.FirstOrDefault(gc => gc.Id == id).Result
+                Messages = _groupMessageRepository.GetWhere(gm => gm.Id == id).ToList(),
+                Chat = _groupChatRepository.FirstOrDefault(gc => gc.Id == id)
             };
 
             return View(groupChatViewModel);
+
         }
 
         [HttpPost]
-        public ActionResult SendMessage(string message, Guid chatId, Guid otherAccountId)
+        public ActionResult SendMessage(string message, string chatId, string otherAccountId)
         {
-            var chat = _privateChatRepository.FirstOrDefault(pc => pc.Id == chatId).Result;
-
-            var privateMessage = new PrivateMessage
+            if (IsLoggedIn())
             {
-                Content = message,
-                SendDate = DateTime.Now,
-                Sender = (Account)Session["Loggedin_Account"],
-                PrivateChat = chat
-            };
-            chat.Messages.Add(privateMessage);
+                var chat = _privateChatRepository.FirstOrDefault(pc => pc.Id == new Guid(chatId));
 
-            var result = _privateMessageRepository.Add(privateMessage);
+                var privateMessage = new PrivateMessage
+                {
+                    Content = message,
+                    SendDate = DateTime.Now,
+                    Sender = (Account)Session["Loggedin_Account"],
+                    PrivateChat = chat
+                };
+                chat.Messages.Add(privateMessage);
 
-            return PrivateChat(chatId, otherAccountId);
+                var result = _privateMessageRepository.Add(privateMessage);
+
+                return PrivateChat(otherAccountId);
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
-        public ActionResult SendMessage(GroupMessage message)
+        public ActionResult SendPrivateMessage(GroupMessage message)
         {
+            if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             return View();
+
         }
 
         private PrivateChat CreatePrivateChat(Account loggedinAccount, Account otherAccount)
         {
+            if (!IsLoggedIn()) return null;
             var newChat = new PrivateChat
             {
                 FirstUser = loggedinAccount,
@@ -107,7 +112,7 @@ namespace MessageStack.Controllers
                 CreateDate = DateTime.Now,
             };
 
-            newChat = _privateChatRepository.Add(newChat).Result;
+            newChat = _privateChatRepository.Add(newChat);
 
             var message = new PrivateMessage
             {
@@ -116,7 +121,7 @@ namespace MessageStack.Controllers
                 SendDate = DateTime.Now,
             };
 
-            message = _privateMessageRepository.Add(message).Result;
+            message = _privateMessageRepository.Add(message);
             newChat.Messages.Add(message);
 
             ViewBag.OtherAccount = newChat.FirstUser == (Account)Session["Loggedin_Account"]
@@ -124,6 +129,7 @@ namespace MessageStack.Controllers
                 : newChat.FirstUser;
 
             return newChat;
+
         }
     }
 }

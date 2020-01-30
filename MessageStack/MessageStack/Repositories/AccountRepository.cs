@@ -7,8 +7,9 @@ namespace MessageStack.Repositories
 {
     public class AccountRepository : BaseRepository<Account>, IBaseRepository<Account>
     {
-        private AccountRepository(MessageStackContext databaseContext) : base(databaseContext)
+        public AccountRepository(MessageStackContext databaseContext) : base(databaseContext)
         {
+
         }
 
         /// <summary>

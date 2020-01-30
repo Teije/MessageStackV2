@@ -10,15 +10,15 @@
             Welcome, @Model.Firstname @Model.Lastname.
         </h3>
         <p>
-            @Html.ActionLink("Chats", "../Chat/Index")
-            @Html.ActionLink("Contacts", "../Contacts/Index").
+            @Html.ActionLink("Chat", "Index", "Chat")<br/>
+            @Html.ActionLink("Contact", "Index", "Contact")
         </p>
 
         <p>
             Manage account details:<br />
-            @Html.ActionLink("Change name", "ChangeName") <br />
-            @Html.ActionLink("Change contact information", "ChangeContactInfo") <br />
-            @Html.ActionLink("Change password", "ChangePassword")
+            @Html.ActionLink("Change name", "AccountChangeName") <br />
+            @Html.ActionLink("Change contact information", "AccountChangeName") <br />
+            @Html.ActionLink("Change password", "AccountChangePassword")
         </p>
     }
 </section>

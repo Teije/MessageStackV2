@@ -5,7 +5,7 @@ namespace MessageStack.Repositories
 {
     public class PrivateMessageRepository : BaseRepository<PrivateMessage>, IBaseRepository<PrivateMessage>
     {
-        private PrivateMessageRepository(MessageStackContext messageStackContext) : base(messageStackContext)
+        public PrivateMessageRepository(MessageStackContext messageStackContext) : base(messageStackContext)
         {
         }
     }

@@ -19,48 +19,48 @@ namespace MessageStack.Repositories
         /// </summary>
         /// <param name="entity">The object to be add to the database table</param>
         /// <returns>The object that has been added to the database table</returns>
-        Task<T> Add(T entity);
+        T Add(T entity);
 
         /// <summary>
         /// Gets the first or default object based on the predicate
         /// </summary>
         /// <param name="predicate">The condition(s) that the object must meet</param>
         /// <returns>Returns the first object that meets the specified condition(s)</returns>
-        Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate);
+        T FirstOrDefault(Expression<Func<T, bool>> predicate);
 
         /// <summary>
         /// Get all objects from the database table
         /// </summary>
         /// <returns>An enumerator containing all objects from the database table</returns>
-        Task<IEnumerable<T>> GetAll();
+        IEnumerable<T> GetAll();
 
         /// <summary>
         /// Get an object by Id
         /// </summary>
         /// <param name="id">The Id of the object</param>
         /// <returns>Returns the object with the specified Id</returns>
-        Task<T> GetById(Guid id);
+        T GetById(Guid id);
 
         /// <summary>
         /// Get all objects from the database table based on the specified condition
         /// </summary>
         /// <param name="predicate">The condition(s) that the object(s) must meet</param>
         /// <returns>An enumerator containing all objects, that meet the condition specified, from the database table</returns>
-        Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate);
+        IEnumerable<T> GetWhere(Expression<Func<T, bool>> predicate);
 
         /// <summary>
         /// Remove an object from the database table
         /// </summary>
         /// <param name="id">The id of the object to be removed from the database table</param>
         /// <returns>The object that has been removed from the database table</returns>
-        Task<T> Remove(Guid id);
+        T Remove(Guid id);
 
         /// <summary>
         /// Updates an object in the database table
         /// </summary>
         /// <param name="entity">The object to be updated to the database table</param>
         /// <returns>The object that has been updated to the database table</returns>
-        Task<T> Update(T entity);
+        T Update(T entity);
     }
 
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseModel
@@ -74,35 +74,37 @@ namespace MessageStack.Repositories
 
         #region CRUD Methods
 
-        public async Task<T> Add(T entity)
+        public T Add(T entity)
         {
+            entity.Id = Guid.NewGuid();
+            _databaseContext.Set<T>().Attach(entity);
             _databaseContext.Set<T>().Add(entity);
-            await _databaseContext.SaveChangesAsync();
+            _databaseContext.SaveChanges();
             return entity;
         }
 
-        public async Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate) => await _databaseContext.Set<T>().FirstOrDefaultAsync(predicate);
+        public T FirstOrDefault(Expression<Func<T, bool>> predicate) => _databaseContext.Set<T>().AsNoTracking().FirstOrDefault(predicate);
 
-        public async Task<IEnumerable<T>> GetAll() => await _databaseContext.Set<T>().ToListAsync();
+        public IEnumerable<T> GetAll() => _databaseContext.Set<T>().AsNoTracking().ToList();
 
-        public async Task<T> GetById(Guid id) => await _databaseContext.Set<T>().FirstOrDefaultAsync(entity => entity.Id == id);
+        public T GetById(Guid id) => _databaseContext.Set<T>().AsNoTracking().FirstOrDefault(entity => entity.Id == id);
 
-        public async Task<IEnumerable<T>> GetWhere(Expression<Func<T, bool>> predicate) => await _databaseContext.Set<T>().Where(predicate).ToListAsync();
+        public IEnumerable<T> GetWhere(Expression<Func<T, bool>> predicate) => _databaseContext.Set<T>().AsNoTracking().Where(predicate).ToList();
 
-        public async Task<T> Update(T entity)
+        public T Update(T entity)
         {
-            var newEntry = _databaseContext.Set<T>().First(t => t.Id == entity.Id);
+            var newEntry = _databaseContext.Set<T>().AsNoTracking().First(t => t.Id == entity.Id);
             _databaseContext.Entry(newEntry).CurrentValues.SetValues(entity);
-            await _databaseContext.SaveChangesAsync();
+            _databaseContext.SaveChanges();
             return entity;
         }
 
-        public async Task<T> Remove(Guid id)
+        public T Remove(Guid id)
         {
             var entity = _databaseContext.Set<T>().First(t => t.Id == id);
 
             _databaseContext.Set<T>().Remove(entity);
-            await _databaseContext.SaveChangesAsync();
+            _databaseContext.SaveChanges();
 
             return entity;
         }
