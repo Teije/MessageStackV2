@@ -1,30 +1,27 @@
-﻿using MessageStack.Models;
+﻿using MessageStack.Context;
+using MessageStack.Models;
 using MessageStack.Models.ViewModels;
 using MessageStack.Repositories;
 using System;
 using System.Web.Mvc;
 using System.Web.Security;
-using MessageStack.Context;
 
 namespace MessageStack.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController() : this (RepositoryContext.GetInstance())
+        public AccountController() : this(RepositoryContext.GetInstance())
         {
-
         }
 
         public AccountController(MessageStackContext messageStackContext) : base(messageStackContext)
         {
-
         }
 
         public ActionResult Index()
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             return View(Session["Loggedin_Account"]);
-
         }
 
         public ActionResult Login()
@@ -58,7 +55,7 @@ namespace MessageStack.Controllers
         public ActionResult AccountChangeName()
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
-            var account = (Account) Session["Loggedin_Account"];
+            var account = (Account)Session["Loggedin_Account"];
 
             var changeAccountModel = new AccountChangeViewModel
             {
@@ -67,14 +64,13 @@ namespace MessageStack.Controllers
             };
 
             return View(changeAccountModel);
-
         }
 
         [HttpPost]
         public ActionResult AccountChangeName(AccountChangeViewModel model)
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
-            var account = (Account) Session["Loggedin_Account"];
+            var account = (Account)Session["Loggedin_Account"];
 
             if (ModelState.IsValid)
             {
@@ -102,7 +98,7 @@ namespace MessageStack.Controllers
                 Firstname = account.Firstname,
                 Lastname = account.Lastname
             };
-            return RedirectToAction("Index","Account")
+            return RedirectToAction("Index", "Account")
 
             ;
         }
@@ -112,14 +108,13 @@ namespace MessageStack.Controllers
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
             var changePasswordModel = new AccountChangePasswordViewModel();
             return View(changePasswordModel);
-
         }
 
         [HttpPost]
         public ActionResult AccountChangePassword(AccountChangePasswordViewModel model)
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
-            var account = (Account) Session["Loggedin_Account"];
+            var account = (Account)Session["Loggedin_Account"];
             if (!ModelState.IsValid) return View(model);
 
             var loggedInAccount = _accountRepository.Login(account.Email, model.CurrentPassword);
@@ -128,8 +123,22 @@ namespace MessageStack.Controllers
             {
                 if ((model.Password != null || model.RepeatPassword != null) && model.Password == model.RepeatPassword)
                 {
-                    account.Password = Helpers.Encrypt.GenerateSHA512String(model.RepeatPassword);
-                    var result = _accountRepository.Update(account);
+                    var newPassword = Helpers.Encrypt.GenerateSHA512String(model.RepeatPassword);
+
+                    var dbEntry = _accountRepository.GetById(account.Id);
+                    var updatedAccount = new Account
+                    {
+                        Id = dbEntry.Id,
+                        Firstname = dbEntry.Firstname,
+                        Lastname = dbEntry.Lastname,
+                        Phonenumber = dbEntry.Phonenumber,
+                        Email = dbEntry.Email,
+                        GroupChats = dbEntry.GroupChats,
+                        PrivateChats = dbEntry.PrivateChats,
+                        Password = newPassword
+                    };
+
+                    var result = _accountRepository.Update(updatedAccount);
                 }
                 else
                 {
@@ -143,45 +152,54 @@ namespace MessageStack.Controllers
 
             LogOut();
             return RedirectToAction("Index", "Account");
-
         }
 
         public ActionResult AccountChangePhoneEmail()
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
-            return View(new AccountChangePhoneEmailViewModel());
+            var account = (Account)Session["Loggedin_Account"];
 
+            var email = account.Email;
+
+            var dbAccountEntry = _accountRepository.FirstOrDefault(a => a.Email == email);
+
+            var accountChangePhoneEmailViewModel = new AccountChangePhoneEmailViewModel();
+            accountChangePhoneEmailViewModel.Email = dbAccountEntry.Email;
+            accountChangePhoneEmailViewModel.Phonenumber = dbAccountEntry.Phonenumber;
+
+            return View(accountChangePhoneEmailViewModel);
         }
 
         [HttpPost]
         public ActionResult AccountChangePhoneEmail(AccountChangePhoneEmailViewModel model)
         {
             if (!IsLoggedIn()) return RedirectToAction("Index", "Home");
+
             if (!ModelState.IsValid) return View();
 
-            var account = (Account) Session["Loggedin_Account"];
-
-            if (!string.IsNullOrEmpty(model.Email))
+            var dbEntry = _accountRepository.GetById(new Guid(model.Id));
+            var updatedAccount = new Account
             {
-                account.Email = model.Email;
-            }
+                Id = dbEntry.Id,
+                Firstname = dbEntry.Firstname,
+                Lastname = dbEntry.Lastname,
+                Phonenumber = model.Phonenumber,
+                Email = model.Email,
+                GroupChats = dbEntry.GroupChats,
+                PrivateChats = dbEntry.PrivateChats,
+                Password = dbEntry.Password
+            };
 
-            if (model.Phonenumber != null && model.Email != null)
-            {
-                account.Phonenumber = model.Phonenumber;
-            }
+            _accountRepository.Update(updatedAccount);
 
-            var result = _accountRepository.Update(account);
-
+            LogOut();
             return RedirectToAction("Index", "Home");
-
         }
 
         public ActionResult LogOut()
         {
             if (IsLoggedIn())
             {
-
                 FormsAuthentication.SignOut();
                 Session.Clear();
                 return RedirectToAction("Index", "Home");

@@ -8,10 +8,10 @@
         @using (Html.BeginForm())
         {
             @Html.LabelFor(m => m.Firstname)<br />
-            @Html.TextBoxFor(m => m.Firstname)
+            @Html.TextBoxFor(m => m.Firstname, new {placeholder = @Model.Firstname})
             <br />
             @Html.LabelFor(m => m.Lastname)<br />
-            @Html.TextBoxFor(m => m.Lastname)
+            @Html.TextBoxFor(m => m.Lastname, new {placeholder = @Model.Lastname})
             <br />
 
             <input name="Id" value="@Model.Id" hidden/>

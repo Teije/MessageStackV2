@@ -2,19 +2,9 @@
 @model MessageStack.Models.ViewModels.ChatListViewModel
 
 <section class="container">
-    <section class="row">
-        <section class="col-lg-6">
-            <br />
-            <span class="modal-header arrow badge">Private Chats</span>
-        </section>
-        <section class="col-lg-6">
-            <br />
-            Group Chats
-        </section>
-    </section>
 
     <section class="row">
-        <h2>Chats</h2>
+        <h2>Private Chats</h2>
 
         @if (Model.PrivateChats.Count == 0 && Model.GroupChats.Count == 0)
         {
@@ -24,8 +14,7 @@
                 </span>
 
                 <span class="text-primary">
-                    @Html.ActionLink("Create a new private chat", "Index", "Contacts") <br />
-                    @Html.ActionLink("Create a new group chat", "GroupChat")
+                    @Html.ActionLink("Go to your contacts and select the contact to start a chat with", "Index", "Contact") <br />
                 </span>
             </p>
         }
@@ -39,7 +28,7 @@
 
                     if (isFirstUser)
                     {
-                        <p class="col-sm-6">
+                        <p class="">
                             <span style="font-weight:bold">
                             @item.SecondUser.Firstname @item.SecondUser.Lastname
                             </span><br />
@@ -66,7 +55,7 @@
                     }
                     else
                     {
-                        <p class="col-sm-6">
+                        <p class="">
                             <span style="font-weight:bold"> @item.FirstUser.Firstname @item.FirstUser.Lastname</span><br />
                             <span style="font-style:italic"> @item.FirstUser.Email</span> <br />
                             @if (item.Messages.Count > 0)
@@ -96,24 +85,29 @@
             }
             if (Model.GroupChats.Count > 0)
             {
+                <section class="">
+                     <br />
+                     <h2>Group Chats</h2>
+                </section>
                 foreach (var item in Model.GroupChats)
                 {
-                    <p class="col-sm-6">
-                        <span style="font-weight:bold">@item.Name</span><br/>
-                        <span style="font-style:italic">@item.Subject</span><br />
+                    <p class="">
+
+                        <span style="font-weight: bold">@item.Name</span><br/>
+                        <span style="font-style: italic">@item.Subject</span><br/>
                         @if (item.Messages.Count > 0)
                         {
                             <span>
-                                @item.Messages.Last().Sender.Firstname @item.Messages.Last().Sender.Lastname - @item.Messages.Last().SendDate.ToShortTimeString():  @item.Messages.Last().Content
+                                @item.Messages.Last().Sender.Firstname @item.Messages.Last().Sender.Lastname - @item.Messages.Last().SendDate.ToShortTimeString(): @item.Messages.Last().Content
                             </span>
                         }
                         else
                         {
-                        <p class="col-sm-6">
-                            <span style="font-style:italic">No messages have been sent yet!</span>
-                        </p>
-                    }
-                        </p>
+                            <p class="">
+                                <span style="font-style: italic">No messages have been sent yet!</span>
+                            </p>
+                        }
+                    </p>
                     }
                 }
                 else

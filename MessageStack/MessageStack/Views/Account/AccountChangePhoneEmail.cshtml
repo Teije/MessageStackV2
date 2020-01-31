@@ -22,13 +22,15 @@
                 </h2>
 
                 @Html.LabelFor(m => m.Email) <br />
-                @Html.TextBoxFor(m => m.Email) <br />
+                @Html.TextBoxFor(m => m.Email, new {placeholder = @Model.Email}) <br />
 
                 @Html.LabelFor(m => m.Phonenumber) <br />
-                @Html.TextBoxFor(m => m.Phonenumber) <br />
+                @Html.TextBoxFor(m => m.Phonenumber, new {placeholder = @Model.Phonenumber}) <br />
 
                 @Html.LabelFor(m => m.CurrentPassword) <br />
                 @Html.TextBoxFor(m => m.CurrentPassword) <br />
+
+                <input type="hidden" name="Id" value="@account.Id"/>
 
                 <input type="submit" value="Change" id="secondsubmit" />
             }

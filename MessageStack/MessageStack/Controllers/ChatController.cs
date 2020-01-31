@@ -57,8 +57,9 @@ namespace MessageStack.Controllers
             var loggedinAccount = (Account)Session["Loggedin_Account"];
             var otherAccount = _accountRepository.FirstOrDefault(a => a.Id == new Guid(otherAccountId));
 
-            var privateChat = _privateChatRepository.FirstOrDefault(pc =>
-                pc.FirstUser.Id == otherAccount.Id || pc.SecondUser.Id == otherAccount.Id);
+            var privateChat = _privateChatRepository.FirstOrDefault(pc => (
+                pc.FirstUser.Id == otherAccount.Id || pc.SecondUser.Id == otherAccount.Id) &&
+                pc.FirstUser.Id == loggedinAccount.Id || pc.SecondUser.Id == loggedinAccount.Id);
 
             if (privateChat == null)
             {

@@ -9,6 +9,8 @@ namespace MessageStack.Models.ViewModels
 {
     public class AccountChangePhoneEmailViewModel
     {
+        public string Id { get; set; }
+
         [Phone]
         [DisplayName("Enter your new number")]
         public string Phonenumber { get; set; }

@@ -17,10 +17,10 @@
             @using (Html.BeginForm())
             {
                 @Html.LabelFor(m => m.Firstname) <br />
-                @Html.TextBoxFor(m => m.Firstname) <br />
+                @Html.TextBoxFor(m => m.Firstname, new {placeholder = @Model.Firstname}) <br />
 
                 @Html.LabelFor(m => m.Lastname) <br />
-                @Html.TextBoxFor(m => m.Lastname) <br />
+                @Html.TextBoxFor(m => m.Lastname, new {placeholder = @Model.Lastname}) <br />
 
                 @Html.LabelFor(m => m.CurrentPassword) <br />
                 @Html.TextBoxFor(m => m.CurrentPassword) <br />
